@@ -1,4 +1,3 @@
-# alignments in MEGA 11
 #!/bin/bash
 #SBATCH --account=rrg-shaferab
 #SBATCH --cpus-per-task=8
