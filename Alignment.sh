@@ -5,5 +5,6 @@
 #SBATCH --mem=30000M
 #SBATCH --time=3-00:00
 #SBATCH --job-name=clustalw
+#SBATCH --output=clustalw-deer_MT.out
 
-megacc -a /home/sgundy/projects/rrg-shaferab/sgundy/thesis/alignments/clustal_align_nucleotide.mao -d /home/sgundy/projects/rrg-shaferab/sgundy/thesis/all-OVirginianus_MT.fasta -o /Users/saragunderson/Desktop/Academics/Thesis/Bioinformatics/Alignments/all-OVirginianus_MT-clustalw.fasta
+megacc -a /home/sgundy/projects/rrg-shaferab/sgundy/thesis/alignments/clustal_align_nucleotide.mao -d /home/sgundy/projects/rrg-shaferab/sgundy/thesis/all-deer_MT.fasta -o /Users/saragunderson/Desktop/Academics/Thesis/Bioinformatics/Alignments/all-deer_MT-clustalw.fasta
