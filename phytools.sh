@@ -12,6 +12,9 @@ OAmericanus_CRSequences_NCBI_BC_only.tree <- read.tree("OAmericanus_CRSequences_
 # remove ">" from excel names
 latlog_data_BConly$NAME <- gsub(">", "", latlog_data_BConly$NAME)
 
+# Remove extra quotes around tree labels
+OAmericanus_CRSequences_NCBI_BC_only.tree$tip.label <- gsub("^'|'$", "", OAmericanus_CRSequences_NCBI_BC_only.tree$tip.label)
+
 # check if all names in tree match excel
 all(OAmericanus_CRSequences_NCBI_BC_only.tree$tip.label %in% latlog_data_BConly$NAME)
 
