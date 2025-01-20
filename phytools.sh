@@ -4,28 +4,32 @@ remotes::install_github("liamrevell/phytools")
 
 library(phytools)
 library(mapdata)
+library(readxl)
 
-# read tree & excel files
-latlog_data_BConly <- read_excel("OAmericanus_CRSequences_NCBI_latlog_and_namessonly_BConly.xlsx")
-OAmericanus_CRSequences_NCBI_BC_only.tree <- read.tree("OAmericanus_CRSequences_NCBI_BC_only.nwk")
+# load tree and geo info
+data <- read_excel("OAmericanus_CRSequences_NCBI_latlog_and_namessonly_TEST_ID.xlsx")
+tree <- read.tree("OAmericanus_CRSequences_NCBI_TEST_ID.nwk")
 
-# remove ">" from excel names
+# remove ">" if fasta format
 latlog_data_BConly$NAME <- gsub(">", "", latlog_data_BConly$NAME)
 
-# Remove extra quotes around tree labels
-OAmericanus_CRSequences_NCBI_BC_only.tree$tip.label <- gsub("^'|'$", "", OAmericanus_CRSequences_NCBI_BC_only.tree$tip.label)
+# remove " signs from tree labels
+tree$tip.label <- gsub("^'|'$", "", tree$tip.label)
 
-# check if all names in tree match excel
-all(OAmericanus_CRSequences_NCBI_BC_only.tree$tip.label %in% latlog_data_BConly$NAME)
+# root tree
+rooted_tree <- midpoint.root(tree)
 
-# reorder excel names to match tree tip order
-latlog_data_BConly <- latlog_data_BConly[match(OAmericanus_CRSequences_NCBI_BC_only.tree$tip.label, latlog_data_BConly$NAME), ]
+# match sample IDs in geo data to tree tips
+dataordered <- data[match(rooted_tree$tip.label, data$NAME), ]
 
-# Check if the lengths are the same
-length(OAmericanus_CRSequences_NCBI_BC_only.tree$tip.label)
-nrow(latlog_data_BConly)  # Lat/long data row count
+# create coordinates matrix
+coords_matrix <- as.matrix(dataordered[, c("LAT", "LONG")])
 
-# Verify if they are still in the same order
-identical(OAmericanus_CRSequences_NCBI_BC_only.tree$tip.label, latlog_data_BConly$NAME)
+# assign sample IDs to matrix
+rownames(coords_matrix) <- dataordered$NAME
 
-obj <- phylo.to.map(OAmericanus_CRSequences_NCBI_BC_only.tree, latlog_data_BConly, plot = FALSE)
+# create map object
+map <-phylo.to.map(rooted_tree,coords_matrix, plot=FALSE, direction="rightwards”)
+
+# plot
+plot.phylo.to.map(map, direction="rightwards”)
